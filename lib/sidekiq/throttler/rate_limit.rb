@@ -69,7 +69,11 @@ module Sidekiq
       #
       # @return [{String => Float, Integer}]
       def options
-        @options ||= (worker.class.get_sidekiq_options['throttle'] || {}).stringify_keys
+        if worker.class.respond_to?(:get_sidekiq_options)
+          @options ||= (worker.class.get_sidekiq_options['throttle'] || {}).stringify_keys
+        else
+          @options ||= {}
+        end
       end
 
       ##
